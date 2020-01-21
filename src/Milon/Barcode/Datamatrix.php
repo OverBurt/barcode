@@ -97,6 +97,8 @@ define('ENC_ASCII_EXT', 6);
  * ASCII number encoding: ASCII digits (2 bytes per CW)
  */
 define('ENC_ASCII_NUM', 7);
+define('STYLE_SQUARE', 1);
+define('STYLE_RECT', 2);
 
 class Datamatrix {
 
@@ -111,6 +113,8 @@ class Datamatrix {
      * @protected
      */
     protected $last_enc = ENC_ASCII;
+
+
 
     /**
      * Table of Data Matrix ECC 200 Symbol Attributes:<ul>
@@ -133,7 +137,7 @@ class Datamatrix {
      * </ul>
      * @protected
      */
-    protected $symbattr = array(
+    protected $symbattrsquare = array(
         // square form ---------------------------------------------------------------------------------------
         array(0x00a, 0x00a, 0x008, 0x008, 0x00a, 0x00a, 0x008, 0x008, 0x001, 0x001, 0x001, 0x003, 0x005, 0x001, 0x003, 0x005), // 10x10
         array(0x00c, 0x00c, 0x00a, 0x00a, 0x00c, 0x00c, 0x00a, 0x00a, 0x001, 0x001, 0x001, 0x005, 0x007, 0x001, 0x005, 0x007), // 12x12
@@ -159,7 +163,11 @@ class Datamatrix {
         array(0x078, 0x078, 0x06c, 0x06c, 0x014, 0x014, 0x012, 0x012, 0x006, 0x006, 0x024, 0x41a, 0x198, 0x006, 0x0af, 0x044), // 120x120
         array(0x084, 0x084, 0x078, 0x078, 0x016, 0x016, 0x014, 0x014, 0x006, 0x006, 0x024, 0x518, 0x1f0, 0x008, 0x0a3, 0x03e), // 132x132
         array(0x090, 0x090, 0x084, 0x084, 0x018, 0x018, 0x016, 0x016, 0x006, 0x006, 0x024, 0x616, 0x26c, 0x00a, 0x09c, 0x03e), // 144x144
-        // rectangular form (currently unused) ---------------------------------------------------------------------------
+
+    );
+
+    protected $symbattrrect = array(
+        // rectangular form  ---------------------------------------------------------------------------
         array(0x008, 0x012, 0x006, 0x010, 0x008, 0x012, 0x006, 0x010, 0x001, 0x001, 0x001, 0x005, 0x007, 0x001, 0x005, 0x007), // 8x18
         array(0x008, 0x020, 0x006, 0x01c, 0x008, 0x010, 0x006, 0x00e, 0x001, 0x002, 0x002, 0x00a, 0x00b, 0x001, 0x00a, 0x00b), // 8x32
         array(0x00c, 0x01a, 0x00a, 0x018, 0x00c, 0x01a, 0x00a, 0x018, 0x001, 0x001, 0x001, 0x010, 0x00e, 0x001, 0x010, 0x00e), // 12x26
@@ -221,9 +229,10 @@ class Datamatrix {
      * This is the class constructor.
      * Creates a datamatrix object
      * @param $code (string) Code to represent using Datamatrix.
+     * @param int $style STYLE_SQUARE or STYLE_RECT
      * @public
      */
-    public function __construct($code) {
+    public function __construct($code, $style = STYLE_SQUARE) {
         $barcode_array = array();
         if ((is_null($code)) OR ($code == '\0') OR ($code == '')) {
             return false;
@@ -237,7 +246,14 @@ class Datamatrix {
             return false;
         }
         // get minimum required matrix size.
-        foreach ($this->symbattr as $params) {
+        if($style==STYLE_SQUARE)
+        {
+            $attr = $this->symbattrsquare;
+        }else
+        {
+            $attr = $this->symbattrrect;
+        }
+        foreach ($attr as $params) {
             if ($params[11] >= $nd) {
                 break;
             }
