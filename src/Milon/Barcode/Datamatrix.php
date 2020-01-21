@@ -280,13 +280,13 @@ class Datamatrix {
         // region data column max index
         $rdci = ($params[5] - 1);
         // for each vertical region
-        for ($vr = 0; $vr < $params[9]; ++$vr) {
+        for ($vr = 0; $vr < $params[8]; ++$vr) {
             // for each row on region
             for ($r = 0; $r < $params[4]; ++$r) {
                 // get row
                 $row = (($vr * $params[4]) + $r);
                 // for each horizontal region
-                for ($hr = 0; $hr < $params[8]; ++$hr) {
+                for ($hr = 0; $hr < $params[9]; ++$hr) {
                     // for each column on region
                     for ($c = 0; $c < $params[5]; ++$c) {
                         // get column
