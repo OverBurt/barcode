@@ -344,8 +344,9 @@ class DNS2D {
         $qrtype = strtoupper($mode[0]);
         switch ($qrtype) {
             case 'DATAMATRIX': { // DATAMATRIX (ISO/IEC 16022)
-                    $format = app('config')->get("barcode.datamatrix.style");
-                    $barcode = new Datamatrix($code, $format);
+                    $dmstyle = app('config')->get("barcode.datamatrix.style");
+                    $dmformat = app('config')->get("barcode.datamatrix.format");
+                    $barcode = new Datamatrix($code, $dmstyle, $dmformat);
                     $this->barcode_array = $barcode->getBarcodeArray();
                     $this->barcode_array['code'] = $code;
                     break;

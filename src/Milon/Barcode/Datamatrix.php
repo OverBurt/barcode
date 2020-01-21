@@ -232,7 +232,7 @@ class Datamatrix {
      * @param int $style STYLE_SQUARE or STYLE_RECT
      * @public
      */
-    public function __construct($code, $style = STYLE_SQUARE) {
+    public function __construct($code, $style = STYLE_SQUARE, $format=null) {
         $barcode_array = array();
         if ((is_null($code)) OR ($code == '\0') OR ($code == '')) {
             return false;
@@ -253,11 +253,17 @@ class Datamatrix {
         {
             $attr = $this->symbattrrect;
         }
-        foreach ($attr as $params) {
-            if ($params[11] >= $nd) {
-                break;
+        if($format!==null && array_key_exists($format ,$attr))
+        {
+            $params =  $attr[$format];
+        }else{
+            foreach ($attr as $params) {
+                if ($params[11] >= $nd) {
+                    break;
+                }
             }
         }
+
         if ($params[11] < $nd) {
             // too much data
             return false;
